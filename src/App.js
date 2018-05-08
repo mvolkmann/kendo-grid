@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import {Grid, GridColumn} from '@progress/kendo-react-grid';
 import Renderers from './renderers';
+import '@progress/kendo-theme-default/dist/all.css';
 
 const data = [{name: 'Mark', age: 57}, {name: 'Tami', age: 56}];
 
 class App extends Component {
   state = {
     changes: false,
-    data: [],
+    data,
     editItem: undefined
   };
 
@@ -54,12 +55,25 @@ class App extends Component {
       <div className="App">
         <Grid
           cellRender={this.renderers.cellRender}
-          data={data}
+          data={this.state.data}
+          editField="inEdit"
           itemChange={this.itemChange}
           rowRender={this.renderers.rowRender}
         >
-          <GridColumn field="name" title="Name" width="200px" />
-          <GridColumn editor="numeric" field="age" title="Age" width="100px" />
+          <GridColumn
+            editable={false}
+            field="name"
+            title="Name"
+            width="200px"
+            {...this.editableField('name')}
+          />
+          <GridColumn
+            editor="numeric"
+            field="age"
+            title="Age"
+            width="100px"
+            {...this.editableField('age')}
+          />
         </Grid>
       </div>
     );
