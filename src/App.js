@@ -78,8 +78,6 @@ class App extends Component {
 
   render() {
     const {data, pageData, skip} = this.state;
-    console.log('App.js render: pageData =', pageData);
-    console.log('App.js render: skip =', skip);
     return (
       <div className="App">
         <Grid
