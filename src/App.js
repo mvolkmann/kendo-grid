@@ -3,13 +3,31 @@ import {Grid, GridColumn} from '@progress/kendo-react-grid';
 import Renderers from './renderers';
 import '@progress/kendo-theme-default/dist/all.css';
 
-const data = [{name: 'Mark', age: 57}, {name: 'Tami', age: 56}];
+const PAGE_SIZE = 3;
+const PAGEABLE = {
+  buttonCount: 3,
+  info: true,
+  pageSizes: false,
+  previousNext: true,
+  type: 'input'
+};
+
+const data = [
+  {name: 'Amanda', age: 32},
+  {name: 'Jeremy', age: 31},
+  {name: 'Mark', age: 57},
+  {name: 'Meghan', age: 29},
+  {name: 'RC', age: 36},
+  {name: 'Tami', age: 56}
+];
 
 class App extends Component {
   state = {
     changes: false,
     data,
-    editItem: undefined
+    editItem: undefined,
+    pageData: data.slice(0, PAGE_SIZE),
+    skip: 0
   };
 
   constructor(props: PropsType) {
@@ -50,15 +68,31 @@ class App extends Component {
     this.setState({changes: true});
   };
 
+  onPageChange = event => {
+    console.log('App.js onPageChange: entered');
+    const {skip, take} = event;
+    const {data} = this.state;
+    const pageData = data.slice(skip, skip + take);
+    this.setState({pageData, skip});
+  };
+
   render() {
+    const {data, pageData, skip} = this.state;
+    console.log('App.js render: pageData =', pageData);
+    console.log('App.js render: skip =', skip);
     return (
       <div className="App">
         <Grid
           cellRender={this.renderers.cellRender}
-          data={this.state.data}
+          data={pageData}
           editField="inEdit"
           itemChange={this.itemChange}
+          onPageChange={this.onPageChange}
+          pageable={PAGEABLE}
+          pageSize={PAGE_SIZE}
           rowRender={this.renderers.rowRender}
+          skip={skip}
+          total={data.length}
         >
           <GridColumn
             editable={false}
